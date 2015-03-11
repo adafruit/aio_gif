@@ -1,0 +1,25 @@
+{
+  "name": "aio_pi_gif",
+  "version": "0.1.0",
+  "description": "a raspberry pi & adafruit io gif player",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/toddtreece/aio_gif"
+  },
+  "keywords": [
+    "adafruit",
+    "gif",
+    "raspberry",
+    "pi"
+  ],
+  "author": "Todd Treece <todd@uniontownlabs.org>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/toddtreece/aio_gif/issues"
+  },
+  "homepage": "https://github.com/toddtreece/aio_gif"
+}
