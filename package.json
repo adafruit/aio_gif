@@ -1,7 +1,7 @@
 {
   "name": "aio_gif",
   "version": "0.1.0",
-  "description": "an adafruit io gif server",
+  "description": "adafruit.io gif server",
   "main": "index.js",
   "bin": "./bin/aio_gif",
   "scripts": {
@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/toddtreece/aio_gif"
+    "url": "https://github.com/adafruit/aio_gif"
   },
   "keywords": [
     "adafruit",
@@ -19,9 +19,9 @@
   "author": "Todd Treece <todd@uniontownlabs.org>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/toddtreece/aio_gif/issues"
+    "url": "https://github.com/adafruit/aio_gif/issues"
   },
-  "homepage": "https://github.com/toddtreece/aio_gif",
+  "homepage": "https://github.com/adafruit/aio_gif",
   "dependencies": {
     "adafruit-io": "^1.0.1",
     "commander": "^2.7.1",

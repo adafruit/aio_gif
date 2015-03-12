@@ -28,7 +28,7 @@ function AIO_GIF(key, feed, options) {
 
   // pass key and feed as args or just
   // pass options as first arg
-  if(feed) {
+  if(key && feed) {
     this.key = key;
     this.feed = feed;
   } else {
@@ -37,16 +37,6 @@ function AIO_GIF(key, feed, options) {
 
   // apply options
   util._extend(this, options || {});
-
-  if(! this.key) {
-    this.emit('error', 'Adafruit IO key required');
-    return this.end();
-  }
-
-  if(! this.feed) {
-    this.emit('error', 'Adafruit IO feed required');
-    return this.end();
-  }
 
   // compile handlebars template
   var tmp = fs.readFileSync(this.template, {encoding: 'utf8'});
@@ -60,17 +50,10 @@ function AIO_GIF(key, feed, options) {
   // start http server
   this.listen();
 
-  // aio init
-  this.aio = AIO(this.key);
-
-  // grab last value
-  this.aio.feeds(this.feed).last(function(err, data) {
-    if(err) return;
-    this.write(data.value);
-  }.bind(this));
-
-  // pipe new values
-  this.aio.feeds(this.feed).pipe(this);
+  // connect to AIO if we have a key and feed
+  if(this.key && this.feed) {
+    this.connectToAIO();
+  }
 
 }
 
@@ -79,7 +62,7 @@ proto.key = false;
 proto.feed = false;
 proto.current = '';
 proto.port = 8080;
-proto.hostname = 'localhost';
+proto.hostname = false;
 proto.template = path.join(__dirname, 'template.handlebars');
 proto.compiled_template = false;
 
@@ -111,12 +94,46 @@ proto.validate = function(data) {
 proto.listen = function() {
 
   // respond to requests using the configured port and hostname
-  http.createServer(function(req, res) {
+  var server = http.createServer(function(req, res) {
 
     // return template with current url
     res.writeHead(200, {'Content-Type': 'text/html'});
     res.end(this.compiled_template({ url: this.current }));
 
-  }.bind(this)).listen(this.port, this.hostname);
+  }.bind(this));
+
+  // only listen on specific hostname if it's set
+  if(this.hostname) {
+    return server.listen(this.port, this.hostname);
+  }
+
+  server.listen(this.port);
+
+};
+
+proto.connectToAIO = function(key, feed) {
+
+  // already connected
+  if(this.aio) {
+    return;
+  }
+
+  // save key and feed values if passed
+  if(key && feed) {
+    this.key = key;
+    this.feed = feed;
+  }
+
+  // aio init
+  this.aio = AIO(this.key);
+
+  // grab last value
+  this.aio.feeds(this.feed).last(function(err, data) {
+    if(err) return;
+    this.write(data.value);
+  }.bind(this));
+
+  // pipe new values
+  this.aio.feeds(this.feed).pipe(this);
 
 };
