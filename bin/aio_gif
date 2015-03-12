@@ -1,0 +1,34 @@
+#!/usr/bin/env node
+
+var program = require('commander'),
+    pkg = require('./package.json')
+    gif_server = require('./index.js');
+
+program
+  .version(pkg.version)
+  .option('-k, --key [key]',  'adafruit.io key', false)
+  .option('-f, --feed [feed]',  'adafruit.io feed name to listen to', false)
+  .option('-p, --port [port]', 'listen for requests to port [8080]', 8080)
+  .option('-H, --host [host]', 'listen for requests to hostname [localhost]', 'localhost')
+  .parse(process.argv);
+
+if(! program.key) {
+  console.log('adafruit.io key argument is required');
+  program.help();
+}
+
+if(! program.feed) {
+  console.log('adafruit.io feed argument is required');
+  program.help();
+}
+
+var server = gif_server({
+  key: program.key,
+  feed: program.feed,
+  port: program.port,
+  hostname: program.host
+});
+
+console.log('Starting HTTP server on %s:%d', program.host, program.port);
+
+server.on('error', console.error);
