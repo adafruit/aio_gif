@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
 var program = require('commander'),
-    pkg = require('./package.json')
-    gif_server = require('./index.js');
+    pkg = require('../package.json')
+    gif_server = require('../index.js');
 
 program
   .version(pkg.version)
