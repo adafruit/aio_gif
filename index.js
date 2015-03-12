@@ -25,8 +25,27 @@ function AIO_GIF(key, feed, options) {
 
   stream.Writable.call(this);
 
+  // pass key and feed as args or just
+  // pass options as first arg
+  if(arguments.length == 3) {
+    this.key = key;
+    this.feed = feed;
+  } else {
+    options = key;
+  }
+
   // apply options
   util._extend(this, options || {});
+
+  if(! this.key) {
+    this.emit('error', 'Adafruit IO key required');
+    return this.end();
+  }
+
+  if(! this.feed) {
+    this.emit('error', 'Adafruit IO feed required');
+    return this.end();
+  }
 
   // compile handlebars template
   this.compiled_template = Handlebars.compile(fs.readFileSync(this.template));
@@ -36,10 +55,16 @@ function AIO_GIF(key, feed, options) {
     return this.end();
   }
 
+  // start http server
   this.listen();
+
+  // aio init
+  this.aio = AIO(this.key);
+  this.aio.feeds(this.feed).pipe(this);
 
 }
 
+proto.aio = false;
 proto.key = false;
 proto.feed = false;
 proto.current = '';
@@ -57,8 +82,6 @@ proto._write = function(data, encoding, cb) {
   }
 
   this.current = data;
-  spawn('sudo ./refresh.sh');
-
   cb();
 
 };
