@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+
+    <meta charset="utf-8">
+    <title>Adafruit Animated GIF viewer</title>
+
+    <style>
+      html {
+        {{#if url}}
+          background: url({{url}}) no-repeat 50% 50% fixed;
+        {{#else}}
+          background: url(https://blog.adafruit.com/wp-content/uploads/2014/03/844720692.gif) no-repeat 50% 50% fixed;
+        {{/if}}
+        background-color: #000;
+        -webkit-background-size: contain;
+        -moz-background-size: contain;
+        -o-background-size: contain;
+        background-size: contain;
+      }
+    </style>
+
+  </head>
+
+  <body></body>
+
+</html>
