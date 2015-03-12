@@ -75,6 +75,7 @@ proto._write = function(data, encoding, cb) {
   }
 
   this.current = data;
+  this.emit('image', data);
   cb();
 
 };
