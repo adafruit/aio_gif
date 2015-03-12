@@ -3,8 +3,9 @@
   "version": "0.1.0",
   "description": "an adafruit io gif server",
   "main": "index.js",
+  "bin": "./bin/aio_gif",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "./bin/aio_gif"
   },
   "repository": {
     "type": "git",
@@ -23,6 +24,7 @@
   "homepage": "https://github.com/toddtreece/aio_gif",
   "dependencies": {
     "adafruit-io": "^1.0.1",
+    "commander": "^2.7.1",
     "handlebars": "^3.0.0"
   }
 }

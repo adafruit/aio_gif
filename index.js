@@ -5,6 +5,7 @@ var stream = require('stream'),
     fs = require('fs'),
     AIO = require('adafruit-io'),
     Handlebars = require('handlebars'),
+    path = require('path'),
     spawn = require('child_process').spawn;
 
 /**** Make AIO_GIF a writable stream ****/
@@ -27,7 +28,7 @@ function AIO_GIF(key, feed, options) {
 
   // pass key and feed as args or just
   // pass options as first arg
-  if(arguments.length == 3) {
+  if(feed) {
     this.key = key;
     this.feed = feed;
   } else {
@@ -48,7 +49,8 @@ function AIO_GIF(key, feed, options) {
   }
 
   // compile handlebars template
-  this.compiled_template = Handlebars.compile(fs.readFileSync(this.template));
+  var tmp = fs.readFileSync(this.template, {encoding: 'utf8'});
+  this.compiled_template = Handlebars.compile(tmp);
 
   if(! this.compiled_template) {
     this.emit('error', 'Template failed to compile');
@@ -60,6 +62,14 @@ function AIO_GIF(key, feed, options) {
 
   // aio init
   this.aio = AIO(this.key);
+
+  // grab last value
+  this.aio.feeds(this.feed).last(function(err, data) {
+    if(err) return;
+    this.write(data.value);
+  }.bind(this));
+
+  // pipe new values
   this.aio.feeds(this.feed).pipe(this);
 
 }
@@ -70,7 +80,7 @@ proto.feed = false;
 proto.current = '';
 proto.port = 8080;
 proto.hostname = 'localhost';
-proto.template = 'template.handlebars';
+proto.template = path.join(__dirname, 'template.handlebars');
 proto.compiled_template = false;
 
 proto._write = function(data, encoding, cb) {
@@ -89,7 +99,7 @@ proto._write = function(data, encoding, cb) {
 // checks if data sent has an image extension
 proto.validate = function(data) {
 
-  if(/(?i)\.(jpg|png|gif)$/.test(data)) {
+  if(/(jpg|png|gif)$/.test(data)) {
     return true;
   }
 
@@ -105,7 +115,7 @@ proto.listen = function() {
 
     // return template with current url
     res.writeHead(200, {'Content-Type': 'text/html'});
-    res.end(this.compiled({ url: this.current }));
+    res.end(this.compiled_template({ url: this.current }));
 
   }.bind(this)).listen(this.port, this.hostname);
 
