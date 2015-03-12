@@ -91,7 +91,7 @@ The node.js module is also a writable stream, so you can push images
 directly to the server without connecting to adafruit.io, or push
 additional images when connected to adafruit.io.
 
-```
+```js
 // require module
 var AIO_GIF = require('aio_gif');
 
