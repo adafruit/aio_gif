@@ -128,13 +128,15 @@ proto.connectToAIO = function(key, feed) {
   // aio init
   this.aio = AIO(this.key);
 
+  var feed = this.aio.feeds(this.feed);
+
   // grab last value
-  this.aio.feeds(this.feed).last(function(err, data) {
+  feed.last(function(err, data) {
     if(err) return;
     this.write(data.value);
   }.bind(this));
 
   // pipe new values
-  this.aio.feeds(this.feed).pipe(this);
+  feed.pipe(this);
 
 };

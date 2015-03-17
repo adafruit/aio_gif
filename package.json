@@ -23,7 +23,7 @@
   },
   "homepage": "https://github.com/adafruit/aio_gif",
   "dependencies": {
-    "adafruit-io": "^1.0.1",
+    "adafruit-io": "^1.0.2",
     "commander": "^2.7.1",
     "handlebars": "^3.0.0"
   }
